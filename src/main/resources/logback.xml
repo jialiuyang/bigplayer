@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- ch.qos.logback.core.ConsoleAppender 控制台输出 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%-5level] %d{HH:mm:ss.SSS} [%thread] %logger{36} – %X{sessionId}: %msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>/alidata/logs/bigplayer/bigplayer.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/alidata/logs/bigplayer/bigplayer-%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <MaxHistory>90</MaxHistory>
+            <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <MaxFileSize>500MB</MaxFileSize>
+            </TimeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>[%-5level] %d{HH:mm:ss.SSS} [%thread] %logger{36} – %X{sessionId}: %msg%n</pattern>
+        </layout>
+    </appender>
+
+    <appender name="logStash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>172.19.152.82:5044</destination>
+        <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"appname":"bigplayer"}</customFields> 
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">    
+            <level>info</level>
+        </filter>
+    </appender>
+
+    <root>
+        <level value="error"/>
+        <level value="info"/>
+        <appender-ref ref="file"/>
+        <appender-ref ref="console"/>
+        <appender-ref ref="logStash"/>
+    </root>
+</configuration>

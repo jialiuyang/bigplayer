@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.bigplayer.skysoil.mapper.SkySoilMapper" >
+
+    <insert id="insertBlackBatch" parameterType="java.util.List"   >
+        insert into doublecolor (red01, red02,red03,red04,red05,red06,blue,doubleday)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.red01}, #{item.red02},#{item.red03},#{item.red04},#{item.red05},#{item.red06},#{item.blue},#{item.doubleday})
+        </foreach>
+    </insert>
+
+
+    <insert id="insertThreeBlackBatch" parameterType="java.util.List"   >
+        insert into threedata (datanoe, datatwo,datathree,doubleday)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.datanoe}, #{item.datatwo},#{item.datathree},#{item.doubleday})
+        </foreach>
+    </insert>
+</mapper>
