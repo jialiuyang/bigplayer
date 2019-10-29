@@ -13,4 +13,8 @@ public interface SkySoilMapper {
 
 
     Integer insertThreeBlackBatch (List<ThreeVo> vo);
+
+    List<DoubleVo>  selectSome();
+
+    int updateById(DoubleVo vo);
 }

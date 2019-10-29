@@ -30,7 +30,8 @@ public class SkySoilServiceImpl  implements SkySoilService {
         Document document = null;
         int cont=0;
         try {
-            document = Jsoup.connect("https://chart.cp.360.cn/kaijiang/ssq?spanType=2&span=2003-01-11_2019-04-16").get();
+            document = Jsoup.connect("https://chart.cp.360.cn/kaijiang/ssq?spanType=2&span=2003-01-11_2019-10-27").get();
+//            log.info("获取结果"+document);
             Element element =  document.getElementById("data-tab");
             Elements trs= element.getElementsByTag("tr");
             log.info(String.valueOf(trs.size()));
@@ -76,7 +77,7 @@ public class SkySoilServiceImpl  implements SkySoilService {
             e.printStackTrace();
         }
         log.info("保存："+cont);
-       int c= skySoilMapper.insertBlackBatch(doubleVos);
+        int c= skySoilMapper.insertBlackBatch(doubleVos);
         log.info("保存end："+c);
     }
 
@@ -122,6 +123,42 @@ public class SkySoilServiceImpl  implements SkySoilService {
         log.info("保存："+cont);
         int c= skySoilMapper.insertThreeBlackBatch(threeVos);
         log.info("保存end："+c);
+    }
+
+    @Override
+    public void getDryData() {
+        List<DoubleVo> doubleVos=new ArrayList<>();
+        Document document = null;
+        int cont=0;
+        List<DoubleVo> vos= skySoilMapper.selectSome();
+        for (DoubleVo doubleVo :vos) {
+            String doubleday=doubleVo.getDoubleday();
+            String s=doubleday.replace("-0","-");
+            try {
+                String url="http://www.laohuangli.net/"+doubleday.substring(0,4)+"/"+s+  ".html";
+                System.out.println(url);
+                document = Jsoup.connect(url).get();
+//                log.info("获取结果"+document);
+                Elements trs =  document.getElementsByTag("table");
+                Element element=trs.get(6);
+                Elements fonts=  element.getElementsByTag("font");
+                String mn=element.getElementsByTag("div").get(1).text();
+                String five= mn.substring(mn.length()-1,mn.length());
+                String day=fonts.get(2).text();
+                String dry= day.substring(0,1);
+                String branch=day.substring(1,2);
+                System.out.println("five"+five+"dry"+dry+"branch"+branch);
+                doubleVo.setFive(five);
+                doubleVo.setDry(dry);
+                doubleVo.setBranch(branch);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            log.info("保存："+cont);
+            Integer i= skySoilMapper.updateById(doubleVo);
+            cont=cont+i;
+        }
+        log.info("更新end："+cont);
     }
 }
 

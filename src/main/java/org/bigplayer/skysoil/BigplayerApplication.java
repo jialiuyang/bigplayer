@@ -9,9 +9,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @MapperScan(basePackages = {"org.bigplayer.skysoil.mapper"})
 @EnableHystrix
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 @SpringBootApplication
-@EnableFeignClients
+//@EnableFeignClients
 public class BigplayerApplication {
 
     public static void main(String[] args) {
